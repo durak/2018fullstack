@@ -54,8 +54,6 @@ class App extends React.Component {
 
 }
 
-const Heading = (props) => <h1>{props.text}</h1>
-
 const Statistics = ({good, neutral, bad}) => {
   const average = () => {
     const sum = good * 1 +  bad * -1
@@ -70,18 +68,18 @@ const Statistics = ({good, neutral, bad}) => {
 
   return (
     <div>
-      <Review text={Texts.good} value={good} />
-      <Review text={Texts.neutral} value={neutral} />
-      <Review text={Texts.bad} value={bad} />
-      <Review text={Texts.average} value={average()} />
-      <Review text={Texts.positive} value={positive()} />
+      <Statistic text={Texts.good} value={good} />
+      <Statistic text={Texts.neutral} value={neutral} />
+      <Statistic text={Texts.bad} value={bad} />
+      <Statistic text={Texts.average} value={average()} />
+      <Statistic text={Texts.positive} value={positive() + " %"} />
     </div>
   )
 }
 
+const Statistic = ({text, value}) => <div>{text} {value}</div>
 
-
-const Review = ({text, value}) => <div>{text} {value}</div>
+const Heading = ({text}) => <h1>{text}</h1>
 
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}>
