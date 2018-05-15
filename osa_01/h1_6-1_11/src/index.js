@@ -55,16 +55,18 @@ class App extends React.Component {
 }
 
 const Statistics = ({good, neutral, bad}) => {
+  const count = good + neutral + bad
+
   const average = () => {
     const sum = good * 1 +  bad * -1
-    const count = good + neutral + bad
     return (sum / count).toFixed(2)
   }
 
-  const positive = () => {
-    const count = good + neutral + bad
+  const positive = () => {    
     return (good / count * 100).toFixed(1)
   }
+
+  if (count === 0) return <div>ei yhtään palautetta annettu</div>
 
   return (
     <div>
