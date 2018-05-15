@@ -26,16 +26,14 @@ class App extends React.Component {
     
   }
 
-  goodReview = () => {
-    this.setState((prevState) => ({good: prevState.good + 1 }))
-  }
-
-  neutralReview = () => {
-    this.setState((prevState) => ({ neutral: prevState.neutral + 1 }))
-  }
-
-  badReview = () => {
-    this.setState((prevState) => ({ bad: prevState.bad + 1 }))
+  review = (type) => {
+    return () => this.setState(
+      (prevState) => {
+        let newState = {}
+        newState[type] = prevState[type] + 1
+        return newState        
+      }
+    )
   }
 
   render() {
@@ -43,9 +41,9 @@ class App extends React.Component {
     return (
       <div>
         <Heading text={Texts.heading} />
-        <Button handleClick={this.goodReview} text={Texts.good} />
-        <Button handleClick={this.neutralReview} text={Texts.neutral} />
-        <Button handleClick={this.badReview} text={Texts.bad} />
+        <Button handleClick={this.review('good')} text={Texts.good} />
+        <Button handleClick={this.review('neutral')} text={Texts.neutral} />
+        <Button handleClick={this.review('bad')} text={Texts.bad} />
         <Heading text={Texts.statistics_heading} />
         <Statistics good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} />
       </div>
