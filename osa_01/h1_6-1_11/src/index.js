@@ -68,16 +68,20 @@ const Statistics = ({good, neutral, bad}) => {
 
   return (
     <div>
-      <Statistic text={Texts.good} value={good} />
-      <Statistic text={Texts.neutral} value={neutral} />
-      <Statistic text={Texts.bad} value={bad} />
-      <Statistic text={Texts.average} value={average()} />
-      <Statistic text={Texts.positive} value={positive() + " %"} />
+      <table>
+        <tbody>
+          <Statistic text={Texts.good} value={good} />
+          <Statistic text={Texts.neutral} value={neutral} />
+          <Statistic text={Texts.bad} value={bad} />
+          <Statistic text={Texts.average} value={average()} />
+          <Statistic text={Texts.positive} value={positive() + " %"} />
+        </tbody>
+      </table>
     </div>
   )
 }
 
-const Statistic = ({text, value}) => <div>{text} {value}</div>
+const Statistic = ({text, value}) => <tr><td>{text}</td><td>{value}</td></tr>
 
 const Heading = ({text}) => <h1>{text}</h1>
 
