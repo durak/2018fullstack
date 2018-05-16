@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Osa = ({nimi, tehtavia}) => <p>{nimi} {tehtavia}</p>
+const Osa = ({ nimi, tehtavia }) => <p>{nimi} {tehtavia}</p>
 
 const Otsikko = ({text}) => <h1>{text}</h1>
 
@@ -14,12 +14,21 @@ const Sisalto = ({ kurssi }) => {
   )
 }
 
+const Yhteensa = ({ kurssi }) => {
+  const total = kurssi.osat.reduce((sum, osa) => sum + osa.tehtavia, 0)
+
+  return (
+    <p>yhteensä {total} tehtävää</p>
+  )
+}
+
 const Kurssi = ({kurssi}) => {
 
   return (
     <div>
       <Otsikko text={kurssi.nimi} />
       <Sisalto kurssi={kurssi} />
+      <Yhteensa kurssi={kurssi} />
     </div>
   )
 }
