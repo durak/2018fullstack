@@ -3,10 +3,17 @@ import ReactDOM from 'react-dom'
 
 class App extends React.Component {
   constructor(props) {
-    super(props)
+    super(props)    
     this.state = {
-      selected: 0
+      selected: 0,
+      votes: new Array(props.anecdotes.length).fill(0)
     }
+  }
+
+  vote = () =>  {
+    const votesUpd = [...this.state.votes]
+    votesUpd[this.state.selected] += 1
+    this.setState({votes: votesUpd})
   }
 
   randomizeAnecdote = () => {
@@ -18,11 +25,17 @@ class App extends React.Component {
     return (
       <div>
         {this.props.anecdotes[this.state.selected]}
-        <div><Button handleClick={this.randomizeAnecdote} text="next anecdote" /></div>
+        <Votes number={this.state.votes[this.state.selected]} />
+        <div>
+          <Button handleClick={this.vote} text="vote" />
+          <Button handleClick={this.randomizeAnecdote} text="next anecdote" />
+        </div>
       </div>
     )
   }
 }
+
+const Votes = ({number}) => <p>Has {number} votes</p>
 
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}>
