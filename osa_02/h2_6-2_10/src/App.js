@@ -17,15 +17,24 @@ class App extends React.Component {
         })
     }
 
+    uniqueName(name) {
+        const names = this.state.persons.map(person => person.name)        
+        return !names.includes(name)
+    }
+
     addPerson = (event) => {
         event.preventDefault()
         const person = {
             name: this.state.newName
         }
-        const persons = this.state.persons.concat(person)
-        this.setState({
-            persons, newName: ''
-        })
+        if (!this.uniqueName(person.name)) {
+            alert('Henkilö on jo luettelossa!')
+        } else {
+            const persons = this.state.persons.concat(person)
+            this.setState({
+                persons, newName: ''
+            })
+        }
     }    
 
     render() {
