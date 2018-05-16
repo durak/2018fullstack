@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import App from './App'
 
 const notes = [
     {
@@ -21,20 +22,6 @@ const notes = [
         important: true
     }
 ]
-
-const App = (props) => {
-    const { notes } = props;
-    const rivit = () => notes.map(note => <li key={note.id}>{note.content}</li>)
-
-    return (
-        <div>
-            <h1>Muistiinpanot</h1>
-            <ul>
-                {rivit()}
-            </ul>
-        </div>
-    )
-}
 
 ReactDOM.render(
     <App notes={notes} />,

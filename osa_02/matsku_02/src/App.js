@@ -1,21 +1,76 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Note from './components/Note'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+
+class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            notes: props.notes,
+            newNote: 'uusi muistiinpano',
+            showAll: true
+        }
+
+    }
+
+    addNote = (event) => {
+        event.preventDefault()
+        const noteObject = {
+            content: this.state.newNote,
+            date: new Date().new,
+            important: Math.random() > 0.5,
+            id: this.state.notes.length + 1
+        }
+
+        // console.log('nappia painettu')
+        // console.log(event.target)
+
+        // korvataan uudella
+        const notes = this.state.notes.concat(noteObject)
+
+        this.setState({
+            notes: notes,
+            newNote: ''
+        })
+    }
+
+    handleNoteChange = (event) => {
+        this.setState({ newNote: event.target.value })
+    }
+
+    toggleVisible = () => {
+        this.setState({ showAll: !this.state.showAll })
+    }
+
+    render() {
+        const notesToShow =
+            this.state.showAll ?
+                this.state.notes :
+                this.state.notes.filter(note => note.important === true)
+
+        const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
+
+        return (
+            <div>
+                <h1>Muistiinpanot</h1>
+                <div>
+                    <button onClick={this.toggleVisible}>
+                        näytä {label}
+                    </button>
+                </div>
+                <ul>
+                    {notesToShow.map(note => <Note key={note.id} note={note} />)}
+                </ul>
+                <form onSubmit={this.addNote}>
+                    <input
+                        value={this.state.newNote}
+                        onChange={this.handleNoteChange}
+                    />
+                    <button type="submit">tallenna</button>
+                </form>
+            </div>
+        )
+    }
 }
 
-export default App;
+export default App
