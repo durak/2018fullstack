@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import './index.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -21,6 +22,11 @@ class App extends React.Component {
     this.setState({selected: nr})
   }
 
+  topVotes() {
+    const top = Math.max(...this.state.votes)
+    return this.state.votes.indexOf(top)
+  }
+
   render() {
     return (
       <div>
@@ -29,6 +35,11 @@ class App extends React.Component {
         <div>
           <Button handleClick={this.vote} text="vote" />
           <Button handleClick={this.randomizeAnecdote} text="next anecdote" />
+        </div>
+        <div>
+        <p><b>most votes:</b></p>
+        <p>{this.props.anecdotes[this.topVotes()]}</p>
+        <Votes number={this.state.votes[this.topVotes()]} />
         </div>
       </div>
     )
