@@ -5,46 +5,50 @@ class App extends React.Component {
         super(props)
         this.state = {
             persons: [
-                { name: 'Arto Hellas' }
+                { name: 'Arto Hellas', number: '040-123456' },
+                { name: 'Martti Tienari', number: '040-123456' },
+                { name: 'Arto Järvinen', number: '040-123456' },
+                { name: 'Lea Kutvonen', number: '040-123456' }
             ],
-            newName: ''                   // lomakkeen kentän kontroillointi
+            newName: '',
+            newNumber: ''
         }
     }
 
-    handleInputNameChange = (event) => {
-        this.setState({
-            newName: event.target.value
-        })
-    }
-
     uniqueName(name) {
-        const names = this.state.persons.map(person => person.name)        
+        const names = this.state.persons.map(person => person.name)
         return !names.includes(name)
     }
 
-    addPerson = (event) => {
+    handleChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value })
+    }
+
+    addContact = (event) => {
         event.preventDefault()
         const person = {
-            name: this.state.newName
+            name: this.state.newName,
+            number: this.state.newNumber
         }
         if (!this.uniqueName(person.name)) {
             alert('Henkilö on jo luettelossa!')
         } else {
             const persons = this.state.persons.concat(person)
             this.setState({
-                persons, newName: ''
+                persons, newName: '', newNumber: ''
             })
         }
-    }    
+    }
 
     render() {
         return (
             <div>
                 <h2>Puhelinluettelo</h2>
                 <ContactForm
-                    newContactHandler={this.addPerson}
+                    addContact={this.addContact}
                     newName={this.state.newName}
-                    inputNameChange={this.handleInputNameChange}
+                    handleChange={this.handleChange}
+                    newNumber={this.state.newNumber}
                 />
                 <h2>Numerot</h2>
                 <ContactDirectory persons={this.state.persons} />
@@ -53,12 +57,15 @@ class App extends React.Component {
     }
 }
 
-const ContactForm = ({ newContactHandler, newName, inputNameChange }) => {
+const ContactForm = ({ addContact, newName, handleChange, newNumber }) => {
     return (
         <div>
-            <form onSubmit={newContactHandler}>
+            <form onSubmit={addContact}>
                 <div>
-                    nimi: <input value={newName} onChange={inputNameChange} />
+                    nimi: <input name="newName" value={newName} onChange={handleChange} />
+                </div>
+                <div>
+                    numero: <input name="newNumber" value={newNumber} onChange={handleChange} />
                 </div>
                 <div>
                     <button type="submit">lisää</button>
@@ -68,19 +75,21 @@ const ContactForm = ({ newContactHandler, newName, inputNameChange }) => {
     )
 }
 
-const ContactDirectory = ({persons}) => {
+const ContactDirectory = ({ persons }) => {
     return (
         <div>
-            <ul>
-                {persons.map(person => <Contact key={person.name} person={person} />)}
-            </ul>
+            <table>
+                <tbody>
+                    {persons.map(person => <Contact key={person.name} person={person} />)}
+                </tbody>
+            </table>
         </div>
     )
 }
 
-const Contact = ({person}) => {
+const Contact = ({ person }) => {
     return (
-        <li>{person.name}</li>
+        <tr><td>{person.name}</td><td>{person.number}</td></tr>
     )
 }
 
