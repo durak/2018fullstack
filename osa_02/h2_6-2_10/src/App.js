@@ -11,7 +11,8 @@ class App extends React.Component {
                 { name: 'Lea Kutvonen', number: '040-123456' }
             ],
             newName: '',
-            newNumber: ''
+            newNumber: '',
+            search: ''
         }
     }
 
@@ -35,7 +36,7 @@ class App extends React.Component {
         } else {
             const persons = this.state.persons.concat(person)
             this.setState({
-                persons, newName: '', newNumber: ''
+                persons, newName: '', newNumber: '', search: ''
             })
         }
     }
@@ -44,6 +45,8 @@ class App extends React.Component {
         return (
             <div>
                 <h2>Puhelinluettelo</h2>
+                <Searchbar search={this.state.search} handleChange={this.handleChange} />
+                <h2>Lisää uusi</h2>
                 <ContactForm
                     addContact={this.addContact}
                     newName={this.state.newName}
@@ -51,10 +54,17 @@ class App extends React.Component {
                     newNumber={this.state.newNumber}
                 />
                 <h2>Numerot</h2>
-                <ContactDirectory persons={this.state.persons} />
+                <ContactDirectory persons={this.state.persons} search={this.state.search} />
             </div>
         )
     }
+}
+
+const Searchbar = ({ search, handleChange }) => {
+    return (
+        <div>
+            haku: <input name="search" value={search} onChange={handleChange} />
+        </div>)
 }
 
 const ContactForm = ({ addContact, newName, handleChange, newNumber }) => {
@@ -75,12 +85,15 @@ const ContactForm = ({ addContact, newName, handleChange, newNumber }) => {
     )
 }
 
-const ContactDirectory = ({ persons }) => {
+const ContactDirectory = ({ persons, search }) => {
+    const filteredContacts = persons.filter(person =>
+        person.name.toLowerCase().includes(search.toLowerCase()))
+
     return (
         <div>
             <table>
                 <tbody>
-                    {persons.map(person => <Contact key={person.name} person={person} />)}
+                    {filteredContacts.map(person => <Contact key={person.name} person={person} />)}
                 </tbody>
             </table>
         </div>
