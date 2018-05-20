@@ -1,6 +1,8 @@
 import React from 'react'
 import Note from './components/Note'
-import axios from 'axios';
+import axios from 'axios'
+import noteService from './services/notes'
+
 
 
 class App extends React.Component {
@@ -17,12 +19,12 @@ class App extends React.Component {
 
     componentDidMount() {
         console.log('will mount')
-        axios
-        .get('http://localhost:3001/notes')
-        .then(response => {
-            console.log('promise fulfilled')
-            this.setState({notes: response.data})
-        })
+
+        noteService
+            .getAll()
+            .then(response => {
+                this.setState({ notes: response })
+            })
     }
 
     addNote = (event) => {
@@ -30,20 +32,26 @@ class App extends React.Component {
         const noteObject = {
             content: this.state.newNote,
             date: new Date().new,
-            important: Math.random() > 0.5,
-            id: this.state.notes.length + 1
+            important: Math.random() > 0.5
+
         }
 
-        // console.log('nappia painettu')
-        // console.log(event.target)
-
         // korvataan uudella
-        const notes = this.state.notes.concat(noteObject)
+        noteService
+        .create(noteObject)
+        .then(newNote => {
+            this.setState({
+                notes: this.state.notes.concat(newNote),
+                newNote: ''
+            })
+        })
+        
+        //const notes = this.state.notes.concat(noteObject)
 
-        this.setState({
+        /* this.setState({
             notes: notes,
             newNote: ''
-        })
+        }) */
     }
 
     handleNoteChange = (event) => {
@@ -52,6 +60,34 @@ class App extends React.Component {
 
     toggleVisible = () => {
         this.setState({ showAll: !this.state.showAll })
+    }
+
+    toggleImportanceOf = (id) => () => {
+        //const url = `http://localhost:3001/notes/${id}`         // määritellään muistiinpanolle yksilöivä url
+        const note = this.state.notes.find(n => n.id === id)    // taulukon find-metodin käyttö
+        const changedNote = { ...note, important: !note.important } //kopioidaan uuteen olioon ja muutetaan important
+
+/*         noteService
+            .update(id, changedNote)
+            .then(response => {
+                this.setState({
+                    notes: this.state.notes.map(note => note.id !== id ? note : changedNote)
+                })
+            }) */
+
+        noteService
+            .update(id, changedNote)
+            .then(changedNote => {
+                const notes = this.state.notes.filter(n => n.id !== id)
+                this.setState({
+                    notes: notes.concat(changedNote)
+                })
+            })
+            .catch(error => {
+                alert(`muistiinpano '${note.content}' on jo valitettavasti poistettu palvelimelta`)
+                this.setState({ notes: this.state.notes.filter(n => n.id !== id) })
+            })
+
     }
 
     render() {
@@ -72,7 +108,7 @@ class App extends React.Component {
                     </button>
                 </div>
                 <ul>
-                    {notesToShow.map(note => <Note key={note.id} note={note} />)}
+                    {notesToShow.map(note => <Note key={note.id} note={note} toggleImportance={this.toggleImportanceOf(note.id)} />)}
                 </ul>
                 <form onSubmit={this.addNote}>
                     <input
