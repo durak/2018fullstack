@@ -37,7 +37,7 @@ class App extends React.Component {
             number: this.state.newNumber
         }
         if (!this.uniqueName(person.name)) {
-            alert('Henkilö on jo luettelossa!')
+            this.updateContact(person)
         } else {
             personService
                 .create(person)
@@ -51,9 +51,8 @@ class App extends React.Component {
     }
 
     deleteContact = (id) => {
-        return () => {
-            const confirmed = window.confirm('poistetaanko kontakti?');
-            if (confirmed) {
+        return () => {            
+            if (this.userConfirmation('poistetaanko kontakti?')) {
                 personService
                     .destroy(id)
                     .then(id => {
@@ -62,6 +61,24 @@ class App extends React.Component {
                     })
             }
         }
+    }
+
+    updateContact = (updatedPerson) => {
+        let id = this.state.persons.find(person => person.name === updatedPerson.name).id
+        if (this.userConfirmation(
+            `${updatedPerson.name} on jo luettelossa, korvataanko numero?`)) {
+            personService
+                .update(id, updatedPerson)
+                .then(updatedPerson => {
+                    this.setState({
+                        persons: this.state.persons.map(person => person.id !== id ? person : updatedPerson)
+                    })
+                })
+        }
+    }
+
+    userConfirmation(message) {
+        return window.confirm(message)
     }
 
     render() {
