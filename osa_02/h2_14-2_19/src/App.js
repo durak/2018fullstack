@@ -48,7 +48,7 @@ class App extends React.Component {
                     this.setState({
                         persons, newName: '', newNumber: '', search: ''
                     })
-                    this.userMessage(`Kontakti ${person.name} lisätty.`)
+                    this.userMessage(`Kontakti ${person.name} lisätty.`, 'message')
                 })
                     
         }
@@ -62,7 +62,7 @@ class App extends React.Component {
                     .then(id => {
                         const persons = this.state.persons.filter(person => person.id !== id)
                         this.setState({ persons })
-                        this.userMessage(`Kontakti poistettu.`)
+                        this.userMessage(`Kontakti poistettu.`, 'message')
                     })
             }
         }
@@ -78,7 +78,12 @@ class App extends React.Component {
                     this.setState({
                         persons: this.state.persons.map(person => person.id !== id ? person : updatedPerson)
                     })
-                    this.userMessage(`Kontaktin ${updatedPerson.name} numero ${updatedPerson.number} päivitetty.`)
+                    this.userMessage(`Kontaktin ${updatedPerson.name} numero ${updatedPerson.number} päivitetty.`, 'message')
+                })
+                .catch(error => {
+                    const persons = this.state.persons.filter(person => person.id !== id)
+                    this.setState({ persons })
+                    this.userMessage(`Kontakti ${updatedPerson.name} on jo poistettu palvelimelta.`, 'error')
                 })
         }
     }
@@ -87,9 +92,9 @@ class App extends React.Component {
         return window.confirm(message)
     }
 
-    userMessage(message) {
-        this.setState({ message })
-        setTimeout(() => { this.setState({ message: null }) },5000)
+    userMessage(message, type) {
+        this.setState({ [type]: message })
+        setTimeout(() => { this.setState({ [type]: null }) }, 5000)
     }
 
     render() {
@@ -155,7 +160,11 @@ const ContactDirectory = ({ persons, search, deleteContact }) => {
 
 const Contact = ({ person, deleteContact }) => {
     return (
-        <tr><td>{person.name}</td><td>{person.number}</td><td><button onClick={deleteContact(person.id)}>Poista</button></td></tr>
+        <tr>
+            <td>{person.name}</td>
+            <td>{person.number}</td>
+            <td><button onClick={deleteContact(person.id)}>Poista</button></td>
+        </tr>
     )
 }
 
