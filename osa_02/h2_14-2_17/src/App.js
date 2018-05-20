@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import personService from './services/persons'
 
 class App extends React.Component {
     constructor(props) {
@@ -13,10 +13,12 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/persons')
-        .then(response => {
-            this.setState({persons: response.data})
-        })
+        personService
+            .getAll()
+            .then(persons => {
+                this.setState({ persons})
+
+            })
     }
 
     uniqueName(name) {
@@ -37,16 +39,14 @@ class App extends React.Component {
         if (!this.uniqueName(person.name)) {
             alert('Henkilö on jo luettelossa!')
         } else {
-            axios
-            .post('http://localhost:3001/persons', person)
-            .then(response => {
-                const persons = this.state.persons.concat(response.data)
-                this.setState({
-                    persons, newName: '', newNumber: '', search: ''
+            personService
+                .create(person)
+                .then(person => {
+                    const persons = this.state.persons.concat(person)
+                    this.setState({
+                        persons, newName: '', newNumber: '', search: ''
+                    })
                 })
-            })
-            
-
         }
     }
 
