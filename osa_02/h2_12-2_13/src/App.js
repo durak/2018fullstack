@@ -30,12 +30,17 @@ class App extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  handleClick = (value) => () => {
+    this.setState({ search: value })
+  }
+
 
   render() {
+
     return (
       <div>
         <Searchbar search={this.state.search} handleChange={this.handleChange} />
-        <Results countries={this.state.countries} names={this.state.names} search={this.state.search} />
+        <Results countries={this.state.countries} names={this.state.names} search={this.state.search} handleClick={this.handleClick} />
       </div>
     )
   }
@@ -49,26 +54,23 @@ const Searchbar = ({ search, handleChange }) => {
     </div>)
 }
 
-const Results = ({ countries, names, search }) => {
+const Results = ({ countries, names, search, handleClick }) => {
   const filteredNames = names.filter(name =>
     name.toLowerCase().includes(search.toLowerCase())
   )
 
-
   if (filteredNames.length > 10) return <div>Tarkenna hakuehtoja</div>
-  if (filteredNames.length > 1) return <MultipleResults names={filteredNames} />
+  if (filteredNames.length > 1) return <MultipleResults names={filteredNames} handleClick={handleClick} />
   if (filteredNames.length === 1) return <SingleResult countries={countries} name={search} />
 
-  return (<div></div>)
-
-
+  return (<div>Ei tuloksia</div>)
 }
 
-const MultipleResults = ({ names }) => {
+const MultipleResults = ({ names, handleClick }) => {
   return (
     <div>
       <ul>
-        {names.map((name) => <li key={name}>{name}</li>)}
+        {names.map((name) => <li key={name} onClick={handleClick(name)}>{name}</li>)}
       </ul>
     </div>
   )
@@ -84,8 +86,6 @@ const SingleResult = ({ countries, name }) => {
       <p>Capital: {country.capital}</p>
       <p>Population: {country.population}</p>
       <img src={country.flag} alt="" height="400" />
-
-
     </div>
   )
 
