@@ -50,6 +50,20 @@ class App extends React.Component {
         }
     }
 
+    deleteContact = (id) => {
+        return () => {
+            const confirmed = window.confirm('poistetaanko kontakti?');
+            if (confirmed) {
+                personService
+                    .destroy(id)
+                    .then(id => {
+                        const persons = this.state.persons.filter(person => person.id !== id)
+                        this.setState({ persons })
+                    })
+            }
+        }
+    }
+
     render() {
         return (
             <div>
@@ -63,7 +77,7 @@ class App extends React.Component {
                     newNumber={this.state.newNumber}
                 />
                 <h2>Numerot</h2>
-                <ContactDirectory persons={this.state.persons} search={this.state.search} />
+                <ContactDirectory persons={this.state.persons} search={this.state.search} deleteContact={this.deleteContact} />
             </div>
         )
     }
@@ -94,7 +108,7 @@ const ContactForm = ({ addContact, newName, handleChange, newNumber }) => {
     )
 }
 
-const ContactDirectory = ({ persons, search }) => {
+const ContactDirectory = ({ persons, search, deleteContact }) => {
     const filteredContacts = persons.filter(person =>
         person.name.toLowerCase().includes(search.toLowerCase()))
 
@@ -102,16 +116,16 @@ const ContactDirectory = ({ persons, search }) => {
         <div>
             <table>
                 <tbody>
-                    {filteredContacts.map(person => <Contact key={person.name} person={person} />)}
+                    {filteredContacts.map(person => <Contact key={person.name} person={person} deleteContact={deleteContact} />)}
                 </tbody>
             </table>
         </div>
     )
 }
 
-const Contact = ({ person }) => {
+const Contact = ({ person, deleteContact }) => {
     return (
-        <tr><td>{person.name}</td><td>{person.number}</td></tr>
+        <tr><td>{person.name}</td><td>{person.number}</td><td><button onClick={deleteContact(person.id)}>Poista</button></td></tr>
     )
 }
 
