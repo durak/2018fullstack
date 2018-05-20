@@ -8,7 +8,9 @@ class App extends React.Component {
             persons: [],
             newName: '',
             newNumber: '',
-            search: ''
+            search: '',
+            error: null,
+            message: null
         }
     }
 
@@ -46,7 +48,9 @@ class App extends React.Component {
                     this.setState({
                         persons, newName: '', newNumber: '', search: ''
                     })
+                    this.userMessage(`Kontakti ${person.name} lisätty.`)
                 })
+                    
         }
     }
 
@@ -58,6 +62,7 @@ class App extends React.Component {
                     .then(id => {
                         const persons = this.state.persons.filter(person => person.id !== id)
                         this.setState({ persons })
+                        this.userMessage(`Kontakti poistettu.`)
                     })
             }
         }
@@ -73,6 +78,7 @@ class App extends React.Component {
                     this.setState({
                         persons: this.state.persons.map(person => person.id !== id ? person : updatedPerson)
                     })
+                    this.userMessage(`Kontaktin ${updatedPerson.name} numero ${updatedPerson.number} päivitetty.`)
                 })
         }
     }
@@ -81,10 +87,17 @@ class App extends React.Component {
         return window.confirm(message)
     }
 
+    userMessage(message) {
+        this.setState({ message })
+        setTimeout(() => { this.setState({ message: null }) },5000)
+    }
+
     render() {
         return (
             <div>
                 <h2>Puhelinluettelo</h2>
+                <Notification message={this.state.error} type="error" />
+                <Notification message={this.state.message} type ="message" />
                 <Searchbar search={this.state.search} handleChange={this.handleChange} />
                 <h2>Lisää uusi</h2>
                 <ContactForm
@@ -143,6 +156,15 @@ const ContactDirectory = ({ persons, search, deleteContact }) => {
 const Contact = ({ person, deleteContact }) => {
     return (
         <tr><td>{person.name}</td><td>{person.number}</td><td><button onClick={deleteContact(person.id)}>Poista</button></td></tr>
+    )
+}
+
+const Notification = ({ message, type }) => {
+    if (message === null) return null
+    return (
+        <div className={type}>
+            {message}
+        </div>
     )
 }
 
