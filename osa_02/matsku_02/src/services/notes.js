@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/notes'
+// const baseUrl = 'http://localhost:3001/notes'
+const baseUrl = 'https://agile-everglades-31794.herokuapp.com/notes'
 
 const getAll = () => {                          // palauttaa myös promisen, .then palauttaa promise
     const req = axios.get(baseUrl)              // promise muuttujaan req
