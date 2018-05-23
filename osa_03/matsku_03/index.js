@@ -24,8 +24,17 @@ let notes = [
   }
 ]
 
+const logger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+
 const app = express()       // funktio palauttaa express-olion
 app.use(bodyParser.json())
+app.use(logger)
 
 
 // routemäärittelyt
@@ -71,18 +80,23 @@ app.post('/notes', (request, response) => {
     id: generateId
   }
   
-
-  console.log('body', body)
-  console.log('req headers', request.headers)
-
   notes = notes.concat(note)
   response.json(note)
+
+/*   console.log('body', body)
+  console.log('req headers', request.headers) */
 })
 
 /* const app = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' })
   res.end(JSON.stringify(notes))
 }) */
+
+const error = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(error)
+
 
 const generateId = () => {
   const maxId = notes.length > 0 ? notes.map(n => n.id).sort().reverse()[0] : 1
@@ -92,6 +106,4 @@ const generateId = () => {
 const port = 3001
 app.listen(port)
 console.log(`Server running on port ${port}`)
-
-
-  
+ 
