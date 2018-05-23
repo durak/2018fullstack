@@ -1,6 +1,7 @@
 const http = require('http')
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 
 let notes = [
@@ -35,6 +36,7 @@ const logger = (request, response, next) => {
 const app = express()       // funktio palauttaa express-olion
 app.use(bodyParser.json())
 app.use(logger)
+app.use(cors())
 
 
 // routemäärittelyt
@@ -77,7 +79,7 @@ app.post('/notes', (request, response) => {
     content: body.content,
     important: body.important || false,
     date: new Date(),
-    id: generateId
+    id: generateId()
   }
   
   notes = notes.concat(note)
