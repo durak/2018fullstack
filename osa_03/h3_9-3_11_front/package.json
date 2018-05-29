@@ -1,5 +1,5 @@
 {
-  "name": "matsku_02",
+  "name": "h2_6-2_10",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,6 +15,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "server": "json-server -p3001 db.json"
-  },
-  "proxy": "http://localhost:3001"
+  }
 }
