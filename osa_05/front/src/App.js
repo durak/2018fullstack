@@ -5,9 +5,19 @@ import noteService from './services/notes'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
-import Togglable from './components/Togglable';
+import Togglable from './components/Togglable'
+import { createStore } from 'redux'
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+// const store = createStore(noteReducer)
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 class App extends React.Component {
   constructor(props) {
@@ -156,9 +166,9 @@ class App extends React.Component {
           :
           <div>
             <p>{this.state.user.name} logged in</p>
-            <Togglable buttonLabel="new note" 
-            ref={component => this.noteForm = component}>
-            
+            <Togglable buttonLabel="new note"
+              ref={component => this.noteForm = component}>
+
               <NoteForm
                 handleSubmit={this.addNote}
                 handleChangle={this.handleNoteChange}
