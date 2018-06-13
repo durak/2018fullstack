@@ -1,53 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { createStore } from 'redux'
+import counterReducer from './counterReducer'
+import Statistics from './components/Statistics'
 
-const Statistiikka = () => {
-  const palautteita = 0
-
-  if (palautteita === 0) {
-    return (
-      <div>
-        <h2>stataistiikka</h2>
-        <div>ei yhtään palautetta annettu</div>
-      </div>
-    )
-  }
-
-  return (
-    <div>
-      <h2>statistiikka</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>hyvä</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>neutraali</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>huono</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>keskiarvo</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>positiivisia</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <button>nollaa tilasto</button>
-    </div >
-  )
-}
+const store = createStore(counterReducer)
 
 class App extends React.Component {
   klik = (nappi) => () => {
+    store.dispatch({type: nappi})
 
   }
 
@@ -58,10 +19,15 @@ class App extends React.Component {
         <button onClick={this.klik('GOOD')}>hyvä</button>
         <button onClick={this.klik('OK')}>neutraali</button>
         <button onClick={this.klik('BAD')}>huono</button>
-        <Statistiikka />
+        <Statistics store={store} handleClick={this.klik('ZERO')} />
       </div>
     )
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const render = () => {
+  ReactDOM.render(<App />, document.getElementById('root'));
+}
+
+render()
+store.subscribe(render)
