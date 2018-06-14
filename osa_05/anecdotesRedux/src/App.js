@@ -2,9 +2,16 @@ import React from 'react';
 
 
 class App extends React.Component {
-  
-  handleVote = (id) => () => {    
+
+  handleVote = (id) => () => {
     this.props.store.dispatch({ type: 'VOTE', id: id })
+  }
+
+  createAnecdote = (e) => {
+    e.preventDefault()
+    const content = e.target.content.value
+    this.props.store.dispatch({ type: 'CREATE', content: content })
+    e.target.content.value = ''
   }
 
   render() {
@@ -24,8 +31,8 @@ class App extends React.Component {
           </div>
         )}
         <h2>create new</h2>
-        <form>
-          <div><input /></div>
+        <form onSubmit={this.createAnecdote}>
+          <div><input name="content" /></div>
           <button>create</button>
         </form>
       </div>

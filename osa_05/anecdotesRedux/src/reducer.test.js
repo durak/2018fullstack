@@ -17,15 +17,23 @@ describe('anecdote reducer', () => {
     deepFreeze(initialState)
     deepFreeze(voteAnecdote)
 
-    let newState = reducer(initialState, {type: 'VOTE', id: voteAnecdote.id})
-    newState = reducer(newState, {type: 'VOTE', id: voteAnecdote.id})
+    let newState = reducer(initialState, { type: 'VOTE', id: voteAnecdote.id })
+    newState = reducer(newState, { type: 'VOTE', id: voteAnecdote.id })
 
     const voteAnecdoteAfter = newState.find((anecdote) => anecdote.id === voteAnecdote.id)
-    
+
     expect(voteAnecdoteAfter).toEqual({
       content: voteAnecdote.content,
       id: voteAnecdote.id,
       votes: 2
     })
+  })
+
+  it('new anecdote is created', () => {
+    const initialState = reducer(undefined, { type: 'NOTHING' })
+    deepFreeze(initialState)
+
+    let newState = reducer(initialState, {type:'CREATE', content: 'test content'})
+    expect(newState.length).toBe(initialState.length + 1)
   })
 })
