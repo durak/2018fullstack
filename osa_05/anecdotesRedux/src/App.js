@@ -6,11 +6,10 @@ import AnecdoteList from './components/AnecdoteList'
 class App extends React.Component {
 
   render() {
-    
     return (
       <div>
-        <AnecdoteList store={this.props.store} />
-        <AnecdoteForm store={this.props.store} />        
+        <AnecdoteList />
+        <AnecdoteForm />        
       </div>
     )
   }
