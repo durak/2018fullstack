@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { anecdoteCreation } from '../reducers/anecdoteReducer'
 import { notificationSet, notificationDestroy } from '../reducers/notificationReducer'
+import anecdoteService from '../services/anecdotes'
 
 const AnecdoteForm = (props) => {
   return (
@@ -18,18 +19,20 @@ const AnecdoteForm = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleSubmit: (e) => {
+    handleSubmit: async (e) => {
       e.preventDefault()
       const content = e.target.anecdote.value
+      e.target.anecdote.value = ''
 
-      dispatch(anecdoteCreation(content))
-      dispatch(notificationSet(`you created ${content}`))
+      const anecdote = await anecdoteService.createNew(content)
+
+      dispatch(anecdoteCreation(anecdote))
+      dispatch(notificationSet(`you created ${anecdote.content}`))
 
       setTimeout(() => {
         dispatch(notificationDestroy())
       }, 5000)
 
-      e.target.anecdote.value = ''
     }
   }
 }
@@ -40,24 +43,3 @@ const ConnectedAnecdoteForm = connect(
 )(AnecdoteForm)
 
 export default ConnectedAnecdoteForm
-
-/*   handleSubmit = (e) => {
-    e.preventDefault()
-    const content = e.target.anecdote.value
-
-    this.props.store.dispatch(
-      anecdoteCreation(content)
-    )
-
-    this.props.store.dispatch(
-      notificationSet(`you created ${content}`)
-    )
-    setTimeout(() => {
-      this.props.store.dispatch(
-        notificationDestroy()
-      )
-    }, 5000)
-
-
-    e.target.anecdote.value = ''
-  } */
