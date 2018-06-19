@@ -1,44 +1,41 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { importanceToggling } from './../reducers/noteReducer'
 import Note from './Note'
 
 class NoteList extends React.Component {
-  componentDidMount() {
+
+  // Ei tarvita, koska storeen liittyvät asiat tulevat taas propseina
+  /*   componentDidMount() {
     const { store } = this.context
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     )
   }
 
-  componentWillUnmount() {
+   componentWillUnmount() {
     this.unsubscribe()
   }
+*/
 
-  toggleImportance = (id) => () => {
+// Ei tarvita, koska toggleImportance saadaan propsina ja connect hoitaa dispatchin
+/*   toggleImportance = (id) => () => {
     this.context.store.dispatch(
       importanceToggling(id)
     )
-  }
-  render() {
-    const notesToShow = () => {
-      const { notes, filter } = this.context.store.getState()
-      if (filter === 'ALL') {
-        return notes
-      }
+  } */
 
-      return filter === 'IMPORTANT'
-        ? notes.filter(note => note.important)
-        : notes.filter(note => !note.important)
-    }
+
+  render() {
 
     return (
       <ul>
-        {notesToShow().map(note =>
+        {this.props.visibleNotes.map(note =>
           <Note
             key={note.id}
             note={note}
-            handleClick={this.toggleImportance(note.id)}
+            handleClick={() => this.props.importanceToggling(note.id)}
           />
         )}
       </ul>
@@ -46,8 +43,31 @@ class NoteList extends React.Component {
   }
 }
 
-NoteList.contextTypes = {
+// Ei tarvita, koska store saadaan propseina eikä contextin kautta
+/* NoteList.contextTypes = {
   store: PropTypes.object
+} */
+
+const notesToShow = (notes, filter) => {
+
+  if (filter === 'ALL') {
+    return notes
+  }
+
+  return filter === 'IMPORTANT'
+    ? notes.filter(note => note.important)
+    : notes.filter(note => !note.important)
 }
 
-export default NoteList
+const mapStateToProps = (state) => {
+  return {
+    visibleNotes: notesToShow(state.notes, state.filter)
+  }
+}
+
+const ConnectedNoteList = connect(
+  mapStateToProps,
+  { importanceToggling }
+)(NoteList)
+
+export default ConnectedNoteList
