@@ -1,43 +1,57 @@
 import React from 'react'
 import { anecdoteVote } from '../reducers/anecdoteReducer'
 import { notificationSet, notificationDestroy } from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
 
-class AnecdoteList extends React.Component {
-  vote = (anecdote) => () => {
-    this.props.store.dispatch(
-      anecdoteVote(anecdote.id)
-    )
-    this.props.store.dispatch(
-      notificationSet(`you voted ${anecdote.content}`)
-    )
-    setTimeout(() => {
-      this.props.store.dispatch(notificationDestroy())
-    }, 5000)
+const AnecdoteList = (props) => {
 
-  }
-  render() {
-    let anecdotes = this.props.store.getState().anecdotes
-    anecdotes = anecdotes.filter(anecdote => anecdote.content.includes(this.props.store.getState().filter))
+  let anecdotes = props.anecdotes
+  anecdotes = anecdotes.filter(anecdote => anecdote.content.includes(props.filter))
 
-    return (
-      <div>
-        <h2>Anecdotes</h2>
-        {anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
-          <div key={anecdote.id}>
-            <div>
-              {anecdote.content}
-            </div>
-            <div>
-              has {anecdote.votes}
-              <button onClick={this.vote(anecdote)}>
-                vote
-              </button>
-            </div>
+  return (
+    <div>
+      <h2>Anecdotes</h2>
+      {anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
+        <div key={anecdote.id}>
+          <div>
+            {anecdote.content}
           </div>
-        )}
-      </div>
-    )
+          <div>
+              has {anecdote.votes}
+            <button onClick={props.handleClick(anecdote)}>
+                vote
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+
+const mapStateToProps = (state) => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter
   }
 }
 
-export default AnecdoteList
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleClick: (anecdote) => () => {
+      dispatch(anecdoteVote(anecdote.id))
+      dispatch(notificationSet(`you voted ${anecdote.content}`))
+      setTimeout(() => {
+        dispatch(notificationDestroy())
+      }, 5000)
+    }
+  }
+}
+
+const ConnectedAnecdoteList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnecdoteList)
+
+
+export default ConnectedAnecdoteList

@@ -22,7 +22,8 @@ const Notification = (props) => {
 const mapStateToProps = (state) => {
   return {
     notification: state.notification
-  }}
+  }
+}
 
 export default connect(
   mapStateToProps
