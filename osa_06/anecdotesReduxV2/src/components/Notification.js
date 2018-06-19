@@ -3,6 +3,7 @@ import React from 'react'
 class Notification extends React.Component {
   render() {
     const notification = this.props.store.getState().notification
+    if (!notification) return null
 
     const style = {
       border: 'solid',
