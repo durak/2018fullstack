@@ -5,13 +5,12 @@ import { connect } from 'react-redux'
 
 const AnecdoteList = (props) => {
 
-  let anecdotes = props.anecdotes
-  anecdotes = anecdotes.filter(anecdote => anecdote.content.includes(props.filter))
+  let anecdotes = props.anecdotesToShow
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
+      {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -28,11 +27,15 @@ const AnecdoteList = (props) => {
   )
 }
 
+const anecdotesToShow = (anecdotes, filter) => {
+  return anecdotes
+    .filter(anecdote => anecdote.content.includes(filter))
+    .sort((a, b) => b.votes - a.votes)
+}
 
 const mapStateToProps = (state) => {
   return {
-    anecdotes: state.anecdotes,
-    filter: state.filter
+    anecdotesToShow: anecdotesToShow(state.anecdotes, state.filter)
   }
 }
 
