@@ -23,6 +23,7 @@ class AnecdoteForm extends React.Component {
       info: this.state.info,
       votes: 0
     })
+    this.props.history.push('/')
   }
 
   render() {
