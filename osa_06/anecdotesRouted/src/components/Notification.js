@@ -7,7 +7,9 @@ const Notification = (props) => {
   const style = {
     border: 'solid',
     padding: 10,
-    borderWidth: 1
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: 'lightgrey'
   }
 
   return (
