@@ -43,9 +43,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleClick: (anecdote) => async () => {
-      await anecdoteService.update({ ...anecdote, votes: anecdote.votes + 1 })
-
-      dispatch(anecdoteVote(anecdote.id))
+      
+      dispatch(anecdoteVote(anecdote))
       dispatch(notificationSet(`you voted ${anecdote.content}`))
       setTimeout(() => {
         dispatch(notificationDestroy())
