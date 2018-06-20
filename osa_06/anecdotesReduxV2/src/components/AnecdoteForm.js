@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { anecdoteCreation } from '../reducers/anecdoteReducer'
-import { notificationSet, notificationDestroy } from '../reducers/notificationReducer'
+import { notify } from '../reducers/notificationReducer'
 
 const AnecdoteForm = (props) => {
   return (
@@ -24,11 +24,8 @@ const mapDispatchToProps = (dispatch) => {
       e.target.anecdote.value = ''
 
       dispatch(anecdoteCreation(content))
-      dispatch(notificationSet(`you created ${content}`))
 
-      setTimeout(() => {
-        dispatch(notificationDestroy())
-      }, 5000)
+      dispatch(notify(`you created ${content}`))
 
     }
   }

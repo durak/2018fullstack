@@ -1,26 +1,41 @@
-const initialNotification = 'here be notifications'
+const initialNotification = {
+  content:'here be notifications',
+  id: -1
+}
 
-const notificationReducer = (state = [], action) => {
+const notificationReducer = (state = initialNotification, action) => {
+  console.log('state', state)
   switch (action.type) {
-    case 'SET_NOTIFICATION':
-      return action.notification
-    case 'DESTROY_NOTIFICATION':
-      return null
+    case 'SET_NOTIFICATION':    
+      return {
+        content:  action.notification,
+        id: action.id
+      }
+    case 'DESTROY_NOTIFICATION':{
+      if (state.id===action.id) {
+        return null
+      } else {
+        return state
+      }
+    }
+
     default:
       return state
   }
 }
 
-export const notificationSet = (notification) => {
+export const notificationSet = (notification, id) => {
   return {
     type: 'SET_NOTIFICATION',
-    notification
+    notification,
+    id
   }
 }
 
-export const notificationDestroy = () => {
+export const notificationDestroy = (id) => {
   return {
-    type: 'DESTROY_NOTIFICATION'
+    type: 'DESTROY_NOTIFICATION',
+    id
   }
 }
 
@@ -33,15 +48,15 @@ const idCounter = (
 
 
 export const notify = (notification, seconds) => {
-  
+
   return (dispatch) => {
     const id = idCounter()
     console.log(id)
     let ms = seconds ? seconds * 100 : 5000
 
-    dispatch(notificationSet(notification))
+    dispatch(notificationSet(notification, id))
     setTimeout(() => {
-      dispatch(notificationDestroy())
+      dispatch(notificationDestroy(id))
     },ms)
 
   }
