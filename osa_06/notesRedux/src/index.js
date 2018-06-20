@@ -6,16 +6,13 @@ import App from './App'
 import noteReducer, { noteInitialization } from './reducers/noteReducer'
 import filterReducer from './reducers/filterReducer'
 import noteService from './services/notes'
+import store from './store'
 
 
-const reducer = combineReducers({
-  notes: noteReducer,
-  filter: filterReducer
-})
 
-const store = createStore(reducer)
 
-console.log(store.getState())
+
+
 
 /* noteService.getAll().then(notes =>
 

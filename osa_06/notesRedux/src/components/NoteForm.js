@@ -10,11 +10,8 @@ class NoteForm extends React.Component {
     event.preventDefault()
     const content = event.target.note.value
     event.target.note.value = ''
-    const newNote = await noteService.createNew(content)
 
-    this.props.noteCreation(newNote)
-
-
+    this.props.noteCreation(content)
   }
   render() {
     return (
