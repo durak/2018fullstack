@@ -1,6 +1,6 @@
 import React from 'react'
 import { anecdoteVote } from '../reducers/anecdoteReducer'
-import { notificationSet, notificationDestroy } from '../reducers/notificationReducer'
+import { notificationSet, notificationDestroy, notify } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
 import anecdoteService from '../services/anecdotes'
 
@@ -45,10 +45,12 @@ const mapDispatchToProps = (dispatch) => {
     handleClick: (anecdote) => async () => {
       
       dispatch(anecdoteVote(anecdote))
-      dispatch(notificationSet(`you voted ${anecdote.content}`))
+      dispatch(notify(`you voted ${anecdote.content}`))
+      
+      /* dispatch(notificationSet(`you voted ${anecdote.content}`))
       setTimeout(() => {
         dispatch(notificationDestroy())
-      }, 5000)
+      }, 5000) */
     }
   }
 }

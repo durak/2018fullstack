@@ -1,6 +1,6 @@
 const initialNotification = 'here be notifications'
 
-const notificationReducer = (state = initialNotification, action) => {
+const notificationReducer = (state = [], action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
       return action.notification
@@ -24,4 +24,26 @@ export const notificationDestroy = () => {
   }
 }
 
+
+const idCounter = (
+  () => {
+    var counter = 0
+    return () => counter++
+  })()
+
+
+export const notify = (notification, seconds) => {
+  
+  return (dispatch) => {
+    const id = idCounter()
+    console.log(id)
+    let ms = seconds ? seconds * 100 : 5000
+
+    dispatch(notificationSet(notification))
+    setTimeout(() => {
+      dispatch(notificationDestroy())
+    },ms)
+
+  }
+}
 export default notificationReducer
