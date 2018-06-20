@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
+import Anecdote from './components/Anecdote'
 import AnecdoteList from './components/AnecdoteList'
 import AnecdoteForm from './components/AnecdoteForm'
 import { Menu, About, Footer } from './components/common'
@@ -61,6 +62,9 @@ class App extends React.Component {
             <Menu />
             <Route exact path="/" render={() =>
               <AnecdoteList anecdotes={this.state.anecdotes} />}
+            />
+            <Route exact path="/anecdotes/:id" render={({ match }) =>
+              <Anecdote anecdote={this.anecdoteById(match.params.id)} />}
             />
             <Route path="/create" render={() =>
               <AnecdoteForm addNew={this.addNew} />}
