@@ -1,13 +1,28 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
-export const Menu = () => (
-  <div>
-    <Link to="/">anecdotes</Link> &nbsp;    
-    <Link to="/create">create new</Link> &nbsp;
-    <Link to="/about">about</Link> &nbsp;
-  </div >
-)
+export const Menu = () => {
+
+  const menuStyle = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: 'lightgrey'
+  }
+
+  const activeStyle = {
+    fontWeight: 'bold',
+    color: 'red'
+  }
+  return (
+    <div style={menuStyle}>
+      <NavLink exact to="/" activeStyle={activeStyle}>anecdotes</NavLink> &nbsp;
+      <NavLink exact to="/create" activeStyle={activeStyle}>create new</NavLink> &nbsp;
+      <NavLink exact to="/about" activeStyle={activeStyle}>about</NavLink> &nbsp;
+    </div>
+  )
+}
 
 export const About = () => (
   <div>
